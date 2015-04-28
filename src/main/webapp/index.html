@@ -1,0 +1,252 @@
+<!--
+
+    Copyright (C) 2014 Geox Terinformatikai Kft.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<title>P3 - Resource handler</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		
+		<!-- JS -->
+			<!-- jQuery -->
+			<script type="text/javascript" src="lib/jquery/jquery-1.9.1.min.js"></script>
+			<!-- DropZone -->
+			<script type="text/javascript" src="lib/dropzone/dropzone.js"></script>
+			<!-- Bootstrap -->
+			<script type="text/javascript" src="lib/bootstrap/js/bootstrap.min.js"></script>
+			<!-- Uduvudu -->
+			<script type="text/javascript" src="lib/uduvudu/lib/underscore-1.6.0.js"></script>
+			<script type="text/javascript" src="lib/uduvudu/lib/handlebars-v1.3.0.js"></script>
+			<script type="text/javascript" src="lib/uduvudu/lib/rdf_store.js"></script>
+			<script type="text/javascript" src="lib/uduvudu/matcher.js"></script>
+			<script type="text/javascript" src="lib/uduvudu/src/uduvudu.js"></script>
+			<!-- Sunlight syntax highlighter -->
+			<script type="text/javascript" src="lib/sunlight/sunlight-min.js"></script>
+			<script type="text/javascript" src="lib/sunlight/plugins/sunlight-plugin.menu-min.js"></script>
+			<script type="text/javascript" src="js/turtleLang.js"></script>
+			<!-- ZeroClipboard -->
+			<script type="text/javascript" src="lib/zeroclipboard/ZeroClipboard.min.js"></script>
+			<!-- History.js -->
+			<script type="text/javascript" src="lib/historyjs/jquery.history.js"></script>
+			<!-- Core -->
+			<script type="text/javascript" src="js/listRes_functions.js"></script>
+			<script type="text/javascript" src="js/turtleExamples.js"></script>
+		<!-- /JS -->
+		
+		<!-- CSS -->
+			<link rel="stylesheet" type="text/css" href="lib/sunlight/themes/sunlight.default.css" />
+			<link rel="stylesheet" type="text/css" href="styles/turtle-highlight.css" />
+			<link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css">
+			<link rel="stylesheet" href="lib/bootstrap/css/bootstrap-theme.min.css">
+			<link rel="stylesheet" href="styles/gui.css" type="text/css" />
+		<!-- /CSS -->
+
+        <link rel="shortcut icon" href="images/fusepool_icon.png" />
+	</head>                                                                       
+	<body role="document">
+		<div class="container">
+            <a href="http://p3.fusepool.eu" target="_blank">
+                <img src="images/fusepoolp3.png" title="Fusepool P3" alt="Fusepool P3" id="logo" />
+            </a>
+        </div>
+		<div class="container">
+			<form class="form-horizontal" id="simple-ui-form" role="form">
+				<div class="form-group" style="display: none">
+					<label for="base" class="col-sm-2 control-label">Base</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" value="" id="base" placeholder="Base">
+					</div>
+				</div>
+				<ul id="actionTypeTabNav" class="nav nav-tabs col-sm-offset-2" role="tablist">
+					<li class="active"><a href="#list" role="tab" data-toggle="tab" id="listNav">List resources</a></li>
+					<li><a href="#add" role="tab" data-toggle="tab" id="addNav">Add resources</a></li>
+					<li><a href="#upload" role="tab" data-toggle="tab" id="uploadNav">Upload resources</a></li>
+				</ul>
+				<div class="tab-content col-sm-offset-2">
+					<div class="tab-pane fade in active" id="list">
+						<div class="panel panel-default">
+							<div class="panel-body">	
+								<div class="form-group">
+									<label for="listContainer" class="col-sm-2 control-label">Container</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="listContainer" placeholder="Container">
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-offset-2 col-sm-10">
+										<div class="alert alert-danger" style="margin-bottom: 0px;display:none" role="alert" id="list-alert" ></div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-offset-2 col-sm-10">
+										<button type="button" class="btn btn-primary" onclick="listFromInput()" >
+											<span class="glyphicon glyphicon-list-alt"></span>
+											<span class="glyphicon-button">List resources</span>
+										</button>
+									</div>
+								</div>
+								<div class="form-group" id="contentVis" style="display: none;">
+									<label class="col-sm-2 control-label" for="resourceList">Resources</label>
+									<div class="col-sm-10">
+										<div class="panel">
+											<select id="resourceList" size="10" class="form-control"></select>
+										</div>
+										<button type="button" class="btn btn-primary" onclick="listFromList()" id="listResourceBtn" >
+											<span class="glyphicon glyphicon-list-alt"></span>
+											<span class="glyphicon-button">List resources</span>
+										</button>
+										<button type="button" class="btn btn-primary" onclick="viewResource()" id="viewResourceBtn" >
+											<span class="glyphicon glyphicon-eye-open"></span>
+											<span class="glyphicon-button">View</span>
+										</button>
+										<button type="button" class="btn btn-danger" onclick="deleteResource()" id="deleteResourceBtn">
+											<span class="glyphicon glyphicon-trash"></span>
+											<span class="glyphicon-button">Delete</span>
+										</button>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-offset-2 col-sm-10">
+										<div class="alert alert-danger" style="margin-bottom: 0px;display:none" role="alert" id="resmod-alert" ></div>
+										<div class="alert alert-success" style="margin-bottom: 0px;display:none" role="alert" id="resmod-success"></div>
+									</div>
+								</div>
+								<!-- Preview -->
+								<div id="resourcePreviewPanel">
+									<ul class="nav nav-tabs" role="tablist">
+										<li class="dropdown">
+											<a class="dropdown-toggle" data-toggle="dropdown" href="#"> Visualization <span class="caret"></span></a>
+											<ul id="visDropdown" class="dropdown-menu" role="tablist">
+												<li role="presentation"><a id="turtlePreviewTab" role="tab" data-toggle="tab" tabindex="-1" href="#turtlePreview">Turtle</a></li>
+												<li role="presentation"><a id="uduvuduPreviewTab" role="tab" data-toggle="tab" tabindex="-1" href="#uduvuduPreview">Uduvudu</a></li>
+												<li role="presentation"><a id="linkToFileTab" role="tab" data-toggle="tab" tabindex="-1" href="#linkToFile">Direct link to file</a></li>
+											</ul>
+										</li>
+									</ul>
+									<div class="well">
+										<div class="tab-content">
+											<div id="turtlePreview" class="tab-pane fade in active"></div>
+											<div id="uduvuduPreview" class="tab-pane fade"></div>
+											<div id="linkToFile" class="tab-pane fade"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>	
+					<div class="tab-pane fade" id="add">
+						<div class="panel panel-default">
+							<div class="panel-body">	
+								<div class="form-group">
+									<label for="addContainer" class="col-sm-2 control-label">Container:</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="addContainer" placeholder="Container">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="textInput" class="col-sm-2 control-label">New resource:</label>
+									<div class="col-sm-10">
+										<textarea class="form-control" rows="5" id="textInput"></textarea>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-offset-2 col-sm-10">
+										<div class="content-type-container">
+											<label class="radio-inline">
+												<input type="radio" name="contentType" value="text/plain"> text/plain
+											</label>
+											<label class="radio-inline">
+												<input type="radio" name="contentType" value="text/turtle" checked="checked"> text/turtle
+											</label>
+										</div>
+										<div class="btn-group paste-container pull-right">
+											<button id="paste-text" class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" />
+												paste example <span class="caret"></span>
+											</button>
+											<ul id="paste-elements" class="dropdown-menu" role="menu">
+												<li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:pasteExample(0)">A Basic Container</a></li>
+												<li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:pasteExample(1)">A transforming LDPC</a></li>
+												<li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:pasteExample(2)">A FOAF based person example</a></li>
+												<li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:pasteExample(3)">A schema.org based restaurant example</a></li>
+											</ul>
+										</div>
+									</div>
+									<div class="clear"> </div>
+								</div>
+								<div class="form-group">
+									<label for="textInput" class="col-sm-2 control-label">Tentative name (<span class="tt">Slug</span> header in the protocol):</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" value="" id="addSlug" placeholder="Tentative name (optional)" />
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-offset-2 col-sm-10">
+										<div class="alert alert-danger" style="margin-bottom: 0px;display:none" role="alert" id="add-alert" ></div>
+										<div class="alert alert-success" style="margin-bottom: 0px;display:none" role="alert" id="add-success"></div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-offset-2 col-sm-10">
+										<button type="button" class="btn btn-primary" onclick="addFromTextarea()" >
+											<span class="glyphicon glyphicon-plus"></span>
+											<span class="glyphicon-button">Add resource to container</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="upload">
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<div class="form-group">
+									<label for="uploadContainer" class="col-sm-2 control-label">Container:</label>
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="uploadContainer" placeholder="Container">
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label">Drop something here:</label>
+									<div class="col-sm-10">
+										<div id="dropArea" action="/file-upload" class="dropzone"></div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-offset-2 col-sm-10">
+										<div class="alert alert-danger" style="margin-bottom: 0px;display:none" role="alert" id="upload-alert" ></div>
+										<div class="alert alert-success" style="margin-bottom: 0px;display:none" role="alert" id="upload-success"></div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="col-sm-offset-2 col-sm-10">
+										<button type="button" class="btn btn-primary" onclick="addFromFileUpload()" >
+											<span class="glyphicon glyphicon-plus"></span>
+											<span class="glyphicon-button">Upload to container</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<!-- Templates -->		
+		<div id="visualizer"></div>		
+	</body>
+</html>	
