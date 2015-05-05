@@ -1,1 +1,11 @@
 language: java
+before_install: mvn install -DskipTests=true -DfinalName=resource-gui-$TRAVIS_TAG
+deploy:
+  provider: releases
+  api_key:
+    secure: aYh7uFIXV7hGquPftY6YoBmWAhQ1ZC5dIzOCaiX2PY8tMfHBb4UkE44/gzT2CzlaCbFfT+Ncp8GrbhTptiYOonn6e5DD0hYPFFVsgE2ek14IFLcqjG1pNtWUkhn6oxOKCdWq5+tGI7kSKSIhpVI+iIML/hz8mBX2vXFhpZ2wGtM=
+  file: target/resource-gui-$TRAVIS_TAG-jar-with-dependencies.jar
+  on:
+    repo: fusepoolP3/p3-resource-gui
+    tags: true
+    all_branches: true
