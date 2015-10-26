@@ -11,7 +11,7 @@ turtleExamples[1] = "@prefix dct: <http://purl.org/dc/terms/> . \n" +
 					"@prefix ldp: <http://www.w3.org/ns/ldp#>. \n" + 
 					"@prefix eldp: <http://vocab.fusepool.info/eldp#>. \n" + 
 					"\n" +
-					"<> a ldp:DirectContainer ; \n" +
+					"<> a ldp:BasicContainer ; \n" +                             
 					"\t dct:title \"My first transforming LDPC\" ; \n" +
 					"\t eldp:transformer <http://localhost:7100/simple-transformer>. ";
 

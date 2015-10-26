@@ -207,7 +207,8 @@ function listFromInput() {
 	
 	hideMessages();
 	
-	var container = ignoreEndSlashes($("#listContainer").val());
+	// var container = ignoreEndSlashes($("#listContainer").val());
+        var container = $("#listContainer").val();
 	$("#listContainer").val(container).trigger("change");
 	
 	if($.trim(container) == "") {
@@ -227,8 +228,9 @@ function getResourceList(container) {
 	startLoading();
 	
 	var ajaxRequest = $.ajax({	type: "GET",
-								url: container,
-								cache: false	 });	
+					url: container,
+                                        headers: { "Accept": "text/turtle" },
+					cache: false	 });	
 		
 	ajaxRequest.done(function(response, textStatus, request) {
 		openedLDPC.URI = container;			
@@ -338,10 +340,16 @@ function addFromTextarea() {
 	
 	var tentativeName = $("#addSlug").val();
 	var textData = $("#textInput").val();
+        
+        var linkType;
+        if (/(Basic|Direct)Container/.test(textData))
+          linkType = '<http://www.w3.org/ns/ldp#BasicContainer>; rel="type"';
+        else
+          linkType = '<http://www.w3.org/ns/ldp#Resource> ; rel="type"';
 	
 	var headerCollection = {};
-	headerCollection['text/plain'] = { "Slug" : tentativeName, "Link" : '<http://www.w3.org/ns/ldp#Resource> ; rel="type"' };
-	headerCollection['text/turtle'] = { "Slug" : tentativeName };
+	headerCollection['text/plain'] = { "Slug" : tentativeName, "Link" : linkType };
+	headerCollection['text/turtle'] = { "Slug" : tentativeName, "Link" : linkType };
 	
 	var actContentType = $('input[name=contentType]:checked').val();
 	
