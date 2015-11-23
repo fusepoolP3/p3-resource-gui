@@ -43,7 +43,7 @@ $(document).ready(function() {
 	setDefaultsFromQStr();
 	
 	// History.js - bind to StateChange Event
-    History.Adapter.bind(window,'statechange',function(){ var State = History.getState(); });
+  History.Adapter.bind(window,'statechange',function(){ var State = History.getState(); });
 	
 	// Init functionality of connected input fields
 	initContainerInputSync();
@@ -92,15 +92,27 @@ function resetDropArea() {
 function setDefaultsFromQStr() {
 	var defaultContainer = getURLParameter("defaultContainer");
 	if(defaultContainer.length > 0) {
+		setDefaultContainer(defaultContainer);
+	}
+	else {
+		var platformURI = getURLParameter("platformURI");
+		if(platformURI.length > 0) {
+			P3Platform.getPlatform(platformURI).then(function(p) {
+				setDefaultContainer(p.getLdpRoot());
+			});
+		}
+		else {
+			History.pushState({dc:""}, "", "");
+		}
+	}
+}
+
+function setDefaultContainer(defaultContainer) {
 		$('#listContainer').val(defaultContainer);
 		$('#addContainer').val(defaultContainer);
 		$('#uploadContainer').val(defaultContainer);
 		listFromInput();
-		History.pushState({dc: defaultContainer}, "", "?defaultContainer="+defaultContainer);
-	}
-	else {
-		History.pushState({dc:""}, "", "");
-	}
+		History.pushState({dc: defaultContainer}, "", "?defaultContainer="+defaultContainer);	
 }
 
 function initContainerInputSync() {
